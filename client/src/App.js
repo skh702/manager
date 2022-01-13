@@ -1,7 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 import Customer from './componets/Customer';
-import { Table } from '@mui/material';
+import { CircularProgress, Table } from '@mui/material';
 import { TableHead } from '@mui/material';
 import { TableBody } from '@mui/material';
 import { TableRow } from '@mui/material';
@@ -12,21 +12,26 @@ import { Paper } from '@mui/material';
 const styles = {
   root: {
     width:'100%',
-    spacing: {unit: 1},
+    spacing: {unit: 3},
     overflowX: 'auto'
   },
   table: {
     minWidth: 1080
+  },
+  progress:{
+    spacing:{unit:2}
   }
 }
 
 
 class App extends Component {
   state = {
-    customers:""
+    customers:"",
+    completed: 0
   }
 
   componentDidMount() {
+    this.timer = setInterval(this.progress, 20);
     this.callApi()
     .then(res => this.setState({ customers: res}))
     .catch(err => console.log(err));
@@ -36,6 +41,11 @@ class App extends Component {
     const response = await fetch('/api/customers');
     const body = await response.json();
     return body;
+  }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1});
   }
 
   render(){
@@ -67,7 +77,13 @@ class App extends Component {
                 job={c.job}
               />
             );
-          }) : "" }
+          }) :
+          <TableRow>
+            <TableCell colSpan="6" align="center">
+              <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed}/>
+            </TableCell>
+          </TableRow>
+          }
         </TableBody>
         </Table>
       </Paper>
