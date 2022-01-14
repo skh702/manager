@@ -10,7 +10,7 @@ import { TableCell } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import { Paper } from '@mui/material';
 
-const styles = {
+const styles = theme => ({
   root: {
     width:'100%',
     spacing: {unit: 3},
@@ -22,7 +22,7 @@ const styles = {
   progress:{
     spacing:{unit:2}
   }
-}
+})
 
 
 class App extends Component {
